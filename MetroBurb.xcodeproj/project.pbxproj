@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		065543C61BB9D4DD00674DA1 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 065543C51BB9D4DD00674DA1 /* data */; settings = {ASSET_TAGS = (); }; };
 		069BFB191BB998F70044539F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB181BB998F70044539F /* AppDelegate.swift */; };
 		069BFB1B1BB998F70044539F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB1A1BB998F70044539F /* ViewController.swift */; };
 		069BFB1E1BB998F70044539F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB1C1BB998F70044539F /* Main.storyboard */; };
@@ -14,6 +15,7 @@
 		069BFB231BB998F70044539F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB211BB998F70044539F /* LaunchScreen.storyboard */; };
 		069BFB2E1BB998F70044539F /* MetroBurbTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB2D1BB998F70044539F /* MetroBurbTests.swift */; };
 		069BFB391BB998F70044539F /* MetroBurbUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB381BB998F70044539F /* MetroBurbUITests.swift */; };
+		06EA200F1BB9A269003C7171 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EA200E1BB9A269003C7171 /* CoreLocation.framework */; };
 		764CFE78A5A901B65AB47A0C /* Pods_MetroBurb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		065543C51BB9D4DD00674DA1 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = SOURCE_ROOT; };
 		069BFB151BB998F70044539F /* MetroBurb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetroBurb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		069BFB181BB998F70044539F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		069BFB1A1BB998F70044539F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -48,6 +51,8 @@
 		069BFB341BB998F70044539F /* MetroBurbUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetroBurbUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		069BFB381BB998F70044539F /* MetroBurbUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroBurbUITests.swift; sourceTree = "<group>"; };
 		069BFB3A1BB998F70044539F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		06EA200E1BB9A269003C7171 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		06EA20101BB9A2F1003C7171 /* StringConversion.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringConversion.playground; sourceTree = "<group>"; };
 		86FA9979B13A23EB94ECE4D8 /* Pods-MetroBurb.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetroBurb.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetroBurb/Pods-MetroBurb.release.xcconfig"; sourceTree = "<group>"; };
 		C46122642E1366823CB85363 /* Pods-MetroBurb.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetroBurb.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MetroBurb/Pods-MetroBurb.debug.xcconfig"; sourceTree = "<group>"; };
 		D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetroBurb.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06EA200F1BB9A269003C7171 /* CoreLocation.framework in Frameworks */,
 				764CFE78A5A901B65AB47A0C /* Pods_MetroBurb.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,12 +110,14 @@
 		069BFB171BB998F70044539F /* MetroBurb */ = {
 			isa = PBXGroup;
 			children = (
+				065543C51BB9D4DD00674DA1 /* data */,
 				069BFB181BB998F70044539F /* AppDelegate.swift */,
 				069BFB1A1BB998F70044539F /* ViewController.swift */,
 				069BFB1C1BB998F70044539F /* Main.storyboard */,
 				069BFB1F1BB998F70044539F /* Assets.xcassets */,
 				069BFB211BB998F70044539F /* LaunchScreen.storyboard */,
 				069BFB241BB998F70044539F /* Info.plist */,
+				06EA20101BB9A2F1003C7171 /* StringConversion.playground */,
 			);
 			path = MetroBurb;
 			sourceTree = "<group>";
@@ -144,6 +152,7 @@
 		CEC5F567CF12A672A4183804 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				06EA200E1BB9A269003C7171 /* CoreLocation.framework */,
 				D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */,
 			);
 			name = Frameworks;
@@ -257,6 +266,7 @@
 			files = (
 				069BFB231BB998F70044539F /* LaunchScreen.storyboard in Resources */,
 				069BFB201BB998F70044539F /* Assets.xcassets in Resources */,
+				065543C61BB9D4DD00674DA1 /* data in Resources */,
 				069BFB1E1BB998F70044539F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
