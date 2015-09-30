@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     let manager = CLLocationManager()
     
     //debug
-    var stopNameLabel :UILabel = UILabel(frame: CGRect(x: 20, y: 70, width: 300, height: 60))
+    var stopNameLabel = UILabel(frame: CGRect(x: 20, y: 70, width: 300, height: 60))
 
     
     //MARK: Method
@@ -57,6 +57,21 @@ extension ViewController {
     }
 }
 
+/**
+Erro handling
+
+- StopFileParsingError:          Could not parse the file for some reason.
+- StopFileReadingError:          Could not read the file.
+- ClosestStopNotFound:           Could not find a closest stop at user's location.
+- StopConversionFromStringError: Could not convert String to stop for provided parameter.
+*/
+enum MetroBurbError: ErrorType {
+    case StopFileParsingError,
+        StopFileReadingError,
+        ClosestStopNotFound(location: CLLocation),
+        StopConversionFromStringError(param: LIRRParamColumn)
+}
+
 
 // MARK: - Stop
 extension ViewController {
@@ -67,23 +82,34 @@ extension ViewController {
     
     - returns: An array of Stops, .None if it fails.
     */
-    func getStopData() -> [Stop]? {
+    func getStopData() throws -> [Stop] {
         
         let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: "data/lirr")
         let contents: NSString?
         do {
-            
+
             contents = try String(contentsOfFile: filePath!, encoding: NSUTF8StringEncoding)
         } catch {
-            
-            return .None
+
+            throw MetroBurbError.StopFileReadingError
         }
-        
+    
 //        print(contents)
         
-        var lines = contents?.componentsSeparatedByString("\n")
-        lines?.removeFirst()
-        return lines?.map { $0.toStop() }
+        guard var lines = contents?.componentsSeparatedByString("\n") else {
+            
+            throw MetroBurbError.StopFileParsingError
+        }
+        
+        lines.removeFirst()
+        return try lines.map {
+            do {
+                return try $0.toStop()
+            } catch {
+                //error - foward the value up
+                throw MetroBurbError.StopFileParsingError
+            }
+        }
     }
     
     
@@ -129,34 +155,45 @@ extension ViewController: CLLocationManagerDelegate {
         
         manager.stopUpdatingLocation()
         
-        //Our Stop of interest
-        let stop = closestStop(getStopData()!, toLocation: newLocation)!
-        print("closest stop name: " + stop.name)
-        
-        self.stopNameLabel.text = stop.name
-        stopNameLabel.setNeedsDisplay()
+        do {
+            let stops = try getStopData()
+            guard let stop = closestStop(stops, toLocation: newLocation) else {
+                print("failed, closest stop not found")
+                throw MetroBurbError.ClosestStopNotFound(location: newLocation)
+            }
+            print("closest stop name: " + stop.name)
+            self.stopNameLabel.text = stop.name
+            
+        } catch MetroBurbError.StopFileParsingError {
+            print("stop file parsing error")
+        } catch MetroBurbError.StopFileReadingError {
+            print("stop file parsing error")
+        } catch {
+            print("unknown error")
+        }
     }
+}
+
+
+/**
+Column for LIRR Parameter
+
+- ID:         Stop ID
+- Name:       Stop Name
+- Latitude:   Stop Latitude
+- Longitude:  Stop Longitude
+*/
+enum LIRRParamColumn: Int {
+    
+    case ID = 0
+    case Name = 1
+    case Latitude = 2
+    case Longitude = 3
 }
 
 
 // MARK: - Stop convenience conversion for String type
 extension String {
-
-    /**
-    Column for LIRR Parameter
-    
-    - ID:         Stop ID
-    - Name:       Stop Name
-    - Latitude:   Stop Latitude
-    - Longitude:  Stop Longitude
-    */
-    enum LIRRParamColumn: Int {
-        
-        case ID = 0
-        case Name = 1
-        case Latitude = 2
-        case Longitude = 3
-    }
     
     
     /**
@@ -165,7 +202,7 @@ extension String {
     
     - returns: Stop
     */
-    func toStop() -> Stop {
+    func toStop() throws -> Stop {
         
         func quoteStrippedString(s: String) -> String {
             
@@ -176,13 +213,22 @@ extension String {
         let a = self.componentsSeparatedByString(",")
         let b = a.map { quoteStrippedString($0) }
         
-        let id = Int(b[LIRRParamColumn.ID.rawValue])
-        let name = b[LIRRParamColumn.Name.rawValue]
-        let lat = Double(b[LIRRParamColumn.Latitude.rawValue])
-        let lon = Double(b[LIRRParamColumn.Longitude.rawValue])
-        let loc = CLLocation(latitude: lat!, longitude: lon!)
+        guard let id = Int(b[LIRRParamColumn.ID.rawValue]) else {
+            throw MetroBurbError.StopConversionFromStringError(param: .ID)
+        }
         
-        let stop = Stop(id: id!, name: name, location: loc)
+        guard let lat = Double(b[LIRRParamColumn.Latitude.rawValue]) else {
+            throw MetroBurbError.StopConversionFromStringError(param: .Latitude)
+        }
+        
+        guard let lon = Double(b[LIRRParamColumn.Longitude.rawValue]) else {
+            throw MetroBurbError.StopConversionFromStringError(param: .Longitude)
+        }
+        
+        let name = b[LIRRParamColumn.Name.rawValue]
+        let loc = CLLocation(latitude: lat, longitude: lon)
+        
+        let stop = Stop(id: id, name: name, location: loc)
         return stop
     }
 }

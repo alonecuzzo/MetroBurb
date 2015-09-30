@@ -228,6 +228,7 @@
 				TargetAttributes = {
 					069BFB141BB998F70044539F = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = GGW8P5ZF85;
 					};
 					069BFB281BB998F70044539F = {
 						CreatedOnToolsVersion = 7.0;
@@ -484,6 +485,7 @@
 			baseConfigurationReference = C46122642E1366823CB85363 /* Pods-MetroBurb.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MetroBurb/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.MetroBurb;
@@ -496,6 +498,7 @@
 			baseConfigurationReference = 86FA9979B13A23EB94ECE4D8 /* Pods-MetroBurb.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = MetroBurb/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.codemitten.MetroBurb;
