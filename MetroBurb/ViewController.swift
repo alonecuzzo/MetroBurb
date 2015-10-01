@@ -9,6 +9,7 @@
 import UIKit
 import Darwin
 import CoreLocation
+import ReactiveCocoa
 
 
 /**
@@ -22,12 +23,111 @@ struct Stop {
 }
 
 
+class StopService {
+    
+    func requestForStopsSignal() -> SignalProducer<String, Error> {
+        
+        return SignalProducer { sink, disposable in
+            
+            let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: "data/lirr")
+            let contents: NSString?
+            do {
+                contents = try String(contentsOfFile: filePath!, encoding: NSUTF8StringEncoding)
+                sendNext(sink, contents! as String)
+                sendCompleted(sink)
+            } catch {
+                let error = Error(domain: "", code: Error.FileError.NotFound.hashValue)
+                sendError(sink, error)
+            }
+        }
+    }
+}
+
+
+class StopViewModel {
+    
+    let service: StopService
+    
+    let stops = MutableProperty<[Stop]>([Stop]())
+    let closestStopString = MutableProperty<String>("Loading...")
+    let userLocation = MutableProperty<CLLocation>(CLLocation())
+    
+    init(service: StopService) {
+        self.service = service
+        
+        service.requestForStopsSignal().observeOn(QueueScheduler.mainQueueScheduler).start(Event.sink(error: { error in
+            
+                print("some error: \(error)")
+            
+            }, next: { fileContents in
+                
+                var lines = fileContents.componentsSeparatedByString("\n")
+                lines.removeFirst()
+                self.stops.value = lines.map { $0.toStop()! }
+            }))
+        
+        userLocation.producer.observeOn(QueueScheduler.mainQueueScheduler).startWithNext { newLocation in
+            
+            func closestStop(stops: [Stop], toLocation ourLocation: CLLocation) -> Stop? {
+                
+                var distance = DBL_MAX
+                var stopToReturn: Stop?
+                
+                for stop in stops {
+                    if ourLocation.distanceFromLocation(stop.location) < distance {
+                        distance = ourLocation.distanceFromLocation(stop.location)
+                        stopToReturn = stop
+                    }
+                }
+                
+                return stopToReturn
+            }
+            
+            guard let stop = closestStop(self.stops.value, toLocation: newLocation) else {
+                self.closestStopString.value = "Errr"
+                return
+            }
+            
+            self.closestStopString.value = stop.name
+        }
+    }
+}
+
+
+struct Error : ErrorType {
+    
+    enum FileError {
+        case NotFound
+    }
+    
+    let domain: String
+    let code: Int
+    
+    var _domain: String {
+        return domain
+    }
+    var _code: Int {
+        return code
+    }
+}
+
+func ~=(lhs: Error, rhs: ErrorType) -> Bool {
+    return lhs._domain == rhs._domain
+        && rhs._code   == rhs._code
+}
+
+
 class ViewController: UIViewController {
     
     
     //MARK: Property
     let MTA_API_TOKEN = "c7ed3e715a3e71f70e051cf0a80e4c3d"
     let manager = CLLocationManager()
+    
+    let stopViewModel: StopViewModel = {
+        let service = StopService()
+        return StopViewModel(service: service)
+    }()
     
     //debug
     var stopNameLabel = UILabel(frame: CGRect(x: 20, y: 70, width: 300, height: 60))
@@ -37,6 +137,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        stopNameLabel.rac_text <~ stopViewModel.closestStopString
         
         manager.delegate = self
         if CLLocationManager.authorizationStatus() == .NotDetermined {
@@ -52,7 +154,6 @@ extension ViewController {
     override func viewDidAppear(animated: Bool) {
         
         super.viewDidAppear(animated)
-        stopNameLabel.text = "Be patient loading"
         view.addSubview(stopNameLabel)
     }
 }
@@ -73,71 +174,6 @@ enum MetroBurbError: ErrorType {
 }
 
 
-// MARK: - Stop
-extension ViewController {
-    
-    
-    /**
-    Gets LIRR data from stops.txt file.  Need to handle MNorth as well.
-    
-    - returns: An array of Stops, .None if it fails.
-    */
-    func getStopData() throws -> [Stop] {
-        
-        let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: "data/lirr")
-        let contents: NSString?
-        do {
-
-            contents = try String(contentsOfFile: filePath!, encoding: NSUTF8StringEncoding)
-        } catch {
-
-            throw MetroBurbError.StopFileReadingError
-        }
-    
-//        print(contents)
-        
-        guard var lines = contents?.componentsSeparatedByString("\n") else {
-            
-            throw MetroBurbError.StopFileParsingError
-        }
-        
-        lines.removeFirst()
-        return try lines.map {
-            do {
-                return try $0.toStop()
-            } catch {
-                //error - foward the value up
-                throw MetroBurbError.StopFileParsingError
-            }
-        }
-    }
-    
-    
-    /**
-    Takes an array of Stop objects and determines the closest Stop to the location that is provided.
-    
-    - parameter stops:       Array of Stops (atm provided from the text file)
-    - parameter ourLocation: The current location of the user.
-    
-    - returns: The closest Stop.
-    */
-    func closestStop(stops: [Stop], toLocation ourLocation: CLLocation) -> Stop? {
-        
-        var distance = DBL_MAX
-        var stopToReturn: Stop?
-        
-        for stop in stops {
-            if ourLocation.distanceFromLocation(stop.location) < distance {
-                distance = ourLocation.distanceFromLocation(stop.location)
-                stopToReturn = stop
-            }
-        }
-        
-        return stopToReturn
-    }
-}
-
-
 // MARK: - CLLocationManagerDelegate
 extension ViewController: CLLocationManagerDelegate {
     
@@ -154,23 +190,7 @@ extension ViewController: CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
         
         manager.stopUpdatingLocation()
-        
-        do {
-            let stops = try getStopData()
-            guard let stop = closestStop(stops, toLocation: newLocation) else {
-                print("failed, closest stop not found")
-                throw MetroBurbError.ClosestStopNotFound(location: newLocation)
-            }
-            print("closest stop name: " + stop.name)
-            self.stopNameLabel.text = stop.name
-            
-        } catch MetroBurbError.StopFileParsingError {
-            print("stop file parsing error")
-        } catch MetroBurbError.StopFileReadingError {
-            print("stop file parsing error")
-        } catch {
-            print("unknown error")
-        }
+        stopViewModel.userLocation.value = newLocation
     }
 }
 
@@ -202,7 +222,7 @@ extension String {
     
     - returns: Stop
     */
-    func toStop() throws -> Stop {
+    func toStop() -> Stop? {
         
         func quoteStrippedString(s: String) -> String {
             
@@ -214,15 +234,18 @@ extension String {
         let b = a.map { quoteStrippedString($0) }
         
         guard let id = Int(b[LIRRParamColumn.ID.rawValue]) else {
-            throw MetroBurbError.StopConversionFromStringError(param: .ID)
+//            throw MetroBurbError.StopConversionFromStringError(param: .ID)
+            return .None
         }
         
         guard let lat = Double(b[LIRRParamColumn.Latitude.rawValue]) else {
-            throw MetroBurbError.StopConversionFromStringError(param: .Latitude)
+//            throw MetroBurbError.StopConversionFromStringError(param: .Latitude)
+            return .None
         }
         
         guard let lon = Double(b[LIRRParamColumn.Longitude.rawValue]) else {
-            throw MetroBurbError.StopConversionFromStringError(param: .Longitude)
+//            throw MetroBurbError.StopConversionFromStringError(param: .Longitude)
+            return .None
         }
         
         let name = b[LIRRParamColumn.Name.rawValue]

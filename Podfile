@@ -3,8 +3,8 @@
 use_frameworks!
 target 'MetroBurb' do
 
-pod 'Alamofire', '3.0.0-beta.3'
-#pod 'ReactiveCocoa', '~> 4.0.2-alpha-1'
+#pod 'Alamofire', '3.0.0-beta.3'
+pod 'ReactiveCocoa', '~> 4.0.2-alpha-1'
 
 end
 

@@ -15,6 +15,7 @@
 		069BFB231BB998F70044539F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB211BB998F70044539F /* LaunchScreen.storyboard */; };
 		069BFB2E1BB998F70044539F /* MetroBurbTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB2D1BB998F70044539F /* MetroBurbTests.swift */; };
 		069BFB391BB998F70044539F /* MetroBurbUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB381BB998F70044539F /* MetroBurbUITests.swift */; };
+		06B511851BBCD8B900E7C1AE /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */; settings = {ASSET_TAGS = (); }; };
 		06EA200F1BB9A269003C7171 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EA200E1BB9A269003C7171 /* CoreLocation.framework */; };
 		764CFE78A5A901B65AB47A0C /* Pods_MetroBurb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		069BFB341BB998F70044539F /* MetroBurbUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetroBurbUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		069BFB381BB998F70044539F /* MetroBurbUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroBurbUITests.swift; sourceTree = "<group>"; };
 		069BFB3A1BB998F70044539F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		06EA200E1BB9A269003C7171 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		06EA20101BB9A2F1003C7171 /* StringConversion.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringConversion.playground; sourceTree = "<group>"; };
 		86FA9979B13A23EB94ECE4D8 /* Pods-MetroBurb.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetroBurb.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetroBurb/Pods-MetroBurb.release.xcconfig"; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				069BFB211BB998F70044539F /* LaunchScreen.storyboard */,
 				069BFB241BB998F70044539F /* Info.plist */,
 				06EA20101BB9A2F1003C7171 /* StringConversion.playground */,
+				06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */,
 			);
 			path = MetroBurb;
 			sourceTree = "<group>";
@@ -343,6 +346,7 @@
 			files = (
 				069BFB1B1BB998F70044539F /* ViewController.swift in Sources */,
 				069BFB191BB998F70044539F /* AppDelegate.swift in Sources */,
+				06B511851BBCD8B900E7C1AE /* UIKitExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
