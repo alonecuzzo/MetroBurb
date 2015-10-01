@@ -25,7 +25,7 @@ struct Stop {
 
 class StopService {
     
-    func requestForStopsSignal() -> SignalProducer<String, Error> {
+    func requestForStopsSignal() -> SignalProducer<String, MetroBurbError> {
         
         return SignalProducer { sink, disposable in
             
@@ -36,7 +36,7 @@ class StopService {
                 sendNext(sink, contents! as String)
                 sendCompleted(sink)
             } catch {
-                let error = Error(domain: "", code: Error.FileError.NotFound.hashValue)
+                let error = MetroBurbError(type: MetroBurbErrorType.StopFileReadingError, domain: "com.our.domain.or.whatever")
                 sendError(sink, error)
             }
         }
@@ -94,26 +94,25 @@ class StopViewModel {
 }
 
 
-struct Error : ErrorType {
+struct MetroBurbError: ErrorType {
     
-    enum FileError {
-        case NotFound
-    }
-    
+    let type: MetroBurbErrorType
     let domain: String
-    let code: Int
-    
-    var _domain: String {
-        return domain
-    }
-    var _code: Int {
-        return code
-    }
 }
 
-func ~=(lhs: Error, rhs: ErrorType) -> Bool {
-    return lhs._domain == rhs._domain
-        && rhs._code   == rhs._code
+/**
+Error handling
+
+- StopFileParsingError:          Could not parse the file for some reason.
+- StopFileReadingError:          Could not read the file.
+- ClosestStopNotFound:           Could not find a closest stop at user's location.
+- StopConversionFromStringError: Could not convert String to stop for provided parameter.
+*/
+enum MetroBurbErrorType: ErrorType {
+    case StopFileParsingError,
+        StopFileReadingError,
+        ClosestStopNotFound(location: CLLocation),
+        StopConversionFromStringError(param: LIRRParamColumn)
 }
 
 
@@ -156,21 +155,6 @@ extension ViewController {
         super.viewDidAppear(animated)
         view.addSubview(stopNameLabel)
     }
-}
-
-/**
-Erro handling
-
-- StopFileParsingError:          Could not parse the file for some reason.
-- StopFileReadingError:          Could not read the file.
-- ClosestStopNotFound:           Could not find a closest stop at user's location.
-- StopConversionFromStringError: Could not convert String to stop for provided parameter.
-*/
-enum MetroBurbError: ErrorType {
-    case StopFileParsingError,
-        StopFileReadingError,
-        ClosestStopNotFound(location: CLLocation),
-        StopConversionFromStringError(param: LIRRParamColumn)
 }
 
 
@@ -234,17 +218,17 @@ extension String {
         let b = a.map { quoteStrippedString($0) }
         
         guard let id = Int(b[LIRRParamColumn.ID.rawValue]) else {
-//            throw MetroBurbError.StopConversionFromStringError(param: .ID)
+//            throw MetroBurbErrorType.StopConversionFromStringError(param: .ID)
             return .None
         }
         
         guard let lat = Double(b[LIRRParamColumn.Latitude.rawValue]) else {
-//            throw MetroBurbError.StopConversionFromStringError(param: .Latitude)
+//            throw MetroBurbErrorType.StopConversionFromStringError(param: .Latitude)
             return .None
         }
         
         guard let lon = Double(b[LIRRParamColumn.Longitude.rawValue]) else {
-//            throw MetroBurbError.StopConversionFromStringError(param: .Longitude)
+//            throw MetroBurbErrorType.StopConversionFromStringError(param: .Longitude)
             return .None
         }
         
