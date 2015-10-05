@@ -8,18 +8,147 @@
 
 import UIKit
 import Darwin
+import Result
 import CoreLocation
 import ReactiveCocoa
+
+
+//Decoding 
+infix operator >>> { associativity left precedence 150 }
+
+func >>><A,B>(a: A?, f: A -> B?) -> B? {
+    if let x = a {
+        return f(x)
+    } else {
+        return .None
+    }
+}
+
+//maybe we make a concrete errortype to pass around?
+struct ConcreteErrorType: ErrorType {}
+
+func >>><A, B>(a: Result<A, ConcreteErrorType>, f: A -> Result<B, ConcreteErrorType>) -> Result<B, ConcreteErrorType> {
+    switch a {
+    case let .Success(x): return f(x)
+    case let .Failure(error): return .Failure(error)
+    }
+}
+
+//fmap
+infix operator <^> { associativity left }
+
+func <^><A,B>(f: A -> B, a: A?) -> B? {
+    if let x = a {
+        return f(x)
+    } else {
+        return .None
+    }
+}
+
+//apply
+infix operator <*> { associativity left }
+
+func <*><A,B>(f: (A -> B)?, a: A?) -> B? {
+    if let x = a, fx = f {
+        return fx(x)
+    } else {
+        return .None
+    }
+}
+
+
+protocol TextFileDecodeable {
+    static func decode(contents: String, line: Line) -> Self?
+}
+
+typealias FileContents = AnyObject
+typealias LineParsingStrategy = (String -> [String]?)
+
+enum Line {
+    case MTA, LIRR
+    
+    var parsingStrategy: LineParsingStrategy {
+        switch self {
+        case .MTA:
+            return MetroNorthParsingStrategy.values
+        case .LIRR:
+            return LIRRParsingStrategy.values
+        }
+    }
+}
 
 
 /**
 *  Describes a stop on the given train service. (At the moment either LIRR or MNorth)
 */
-struct Stop {
+struct Stop: TextFileDecodeable {
     
+    //MARK: Property
     let id: Int
     let name: String
     let location: CLLocation
+    let line: Line
+    
+    
+    //MARK: Method
+    static func create(id: Int)(name: String)(location: CLLocation)(line: Line) -> Stop {
+        return Stop(id: id, name: name, location: location, line: line)
+    }
+    
+    //Note: can try something like this for the location: s[3] >>> (s[2] >>> createLocation)
+    static func decode(contents: String, line: Line) -> Stop? {
+        return line.parsingStrategy(contents) >>> { s in
+            return Stop.create <^> s[0] >>> fileContentsInt <*> s[1] >>> fileContentsString <*> CLLocation(latitude: fileContentsDouble(s[2]) ?? 0, longitude: fileContentsDouble(s[3]) ?? 0) <*> line
+        }
+    }
+}
+
+//does it make sense to associate the strategy w/ the linetype?
+
+protocol StopParsingStrategy {
+    static func values(contents: String) -> [String]?
+}
+
+struct MetroNorthParsingStrategy: StopParsingStrategy {
+    static func values(contents: String) -> [String]? {
+        return [""]
+    }
+}
+
+struct LIRRParsingStrategy: StopParsingStrategy {
+    static func values(contents: String) -> [String]? {
+        return [""]
+    }
+}
+
+
+//Parsing help
+func fileContentsInt(contents: FileContents) -> Int? {
+    return contents as? Int
+}
+
+func fileContentsString(contents: FileContents) -> String? {
+    return contents as? String
+}
+
+func fileContentsDouble(contents: FileContents) -> Double? {
+    return contents as? Double
+}
+
+//pass in a dictionary w/ the lat lon
+func createCoreLocation(lat: Double?)(lon: Double?) -> CLLocation {
+    return CLLocation(latitude: lat ?? 0, longitude: lon ?? 0)
+}
+
+func decodeObject<A: TextFileDecodeable>(contents: FileContents) -> Result<A, ConcreteErrorType> {
+    return resultFromOptional(A.decode(fileContentsString(contents)!, line: .LIRR), error: ConcreteErrorType()) //come back and create an actual error
+}
+
+func resultFromOptional<A>(optional: A?, error: ConcreteErrorType) -> Result<A, ConcreteErrorType> {
+    guard let optional = optional else {
+        return .Failure(error)
+    }
+    return .Success(optional)
 }
 
 
@@ -232,10 +361,12 @@ extension String {
             return .None
         }
         
+        //double lat double lon
+        
         let name = b[LIRRParamColumn.Name.rawValue]
         let loc = CLLocation(latitude: lat, longitude: lon)
         
-        let stop = Stop(id: id, name: name, location: loc)
+        let stop = Stop(id: id, name: name, location: loc, line: .LIRR)
         return stop
     }
 }
