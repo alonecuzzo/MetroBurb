@@ -65,14 +65,26 @@ typealias FileContents = AnyObject
 typealias LineParsingStrategy = (String -> [String]?)
 
 enum Line {
-    case MTA, LIRR
+    case MetroNorth, LIRR
     
     var parsingStrategy: LineParsingStrategy {
         switch self {
-        case .MTA:
+        case .MetroNorth:
             return MetroNorthParsingStrategy.values
         case .LIRR:
             return LIRRParsingStrategy.values
+        }
+    }
+}
+
+extension Line {
+    
+    func localTextStorageDirectory() -> String {
+        switch self {
+        case .MetroNorth:
+            return "data/mnorth"
+        case .LIRR:
+            return "data/lirr"
         }
     }
 }
@@ -82,6 +94,7 @@ enum Line {
 *  Describes a stop on the given train service. (At the moment either LIRR or MNorth)
 */
 struct Stop: TextFileDecodeable {
+    
     
     //MARK: Property
     let id: Int
@@ -95,16 +108,18 @@ struct Stop: TextFileDecodeable {
         return Stop(id: id, name: name, location: location, line: line)
     }
     
-    //Note: can try something like this for the location: s[3] >>> (s[2] >>> createLocation)
     static func decode(contents: String, line: Line) -> Stop? {
         return line.parsingStrategy(contents) >>> { s in
-            return Stop.create <^> s[0] >>> fileContentsInt <*> s[1] >>> fileContentsString <*> CLLocation(latitude: fileContentsDouble(s[2]) ?? 0, longitude: fileContentsDouble(s[3]) ?? 0) <*> line
+            Stop.create <^>
+                s[0] >>> fileContentsInt //id
+                <*> s[1] >>> fileContentsString //name
+                <*> CLLocation.create(s[2] >>> fileContentsDouble)(lon: s[3] >>> fileContentsDouble) //location
+                <*> line //line
         }
     }
 }
 
 //does it make sense to associate the strategy w/ the linetype?
-
 protocol StopParsingStrategy {
     static func values(contents: String) -> [String]?
 }
@@ -116,15 +131,23 @@ struct MetroNorthParsingStrategy: StopParsingStrategy {
 }
 
 struct LIRRParsingStrategy: StopParsingStrategy {
+    
     static func values(contents: String) -> [String]? {
-        return [""]
+        
+        func quoteStrippedString(s: String) -> String {
+            let myString = s as NSString
+            return myString.substringWithRange(NSRange(location: 1, length: myString.length - 2))
+        }
+        
+        let a = contents.componentsSeparatedByString(",")
+        return a.map { quoteStrippedString($0) }
     }
 }
 
 
 //Parsing help
 func fileContentsInt(contents: FileContents) -> Int? {
-    return contents as? Int
+    return contents.integerValue
 }
 
 func fileContentsString(contents: FileContents) -> String? {
@@ -132,12 +155,19 @@ func fileContentsString(contents: FileContents) -> String? {
 }
 
 func fileContentsDouble(contents: FileContents) -> Double? {
-    return contents as? Double
+    return contents.doubleValue
 }
 
-//pass in a dictionary w/ the lat lon
-func createCoreLocation(lat: Double?)(lon: Double?) -> CLLocation {
-    return CLLocation(latitude: lat ?? 0, longitude: lon ?? 0)
+
+// MARK: - Convenience curried CLLocation creation.
+extension CLLocation {
+    
+    static func create(lat: Double?)(lon: Double?) -> CLLocation? {
+        if let lat = lat, lon = lon {
+            return CLLocation(latitude: lat, longitude: lon)
+        }
+        return .None
+    }
 }
 
 func decodeObject<A: TextFileDecodeable>(contents: FileContents) -> Result<A, ConcreteErrorType> {
@@ -151,14 +181,24 @@ func resultFromOptional<A>(optional: A?, error: ConcreteErrorType) -> Result<A, 
     return .Success(optional)
 }
 
-
-class StopService {
+protocol StopService {
     
-    func requestForStopsSignal() -> SignalProducer<String, MetroBurbError> {
+    var line: Line { get }
+    
+    func requestForStopsStringSignal() -> SignalProducer<String, MetroBurbError>
+}
+
+
+struct LocalTextStopService: StopService {
+    
+    //this should know about the line
+    let line: Line
+    
+    func requestForStopsStringSignal() -> SignalProducer<String, MetroBurbError> {
         
-        return SignalProducer { sink, disposable in
+        return SignalProducer { sink, disposable in //what about need of [weak self] in structs? can you weakify a value type? or should you?
             
-            let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: "data/lirr")
+            let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: self.line.localTextStorageDirectory())
             let contents: NSString?
             do {
                 contents = try String(contentsOfFile: filePath!, encoding: NSUTF8StringEncoding)
@@ -177,47 +217,49 @@ class StopViewModel {
     
     let service: StopService
     
-    let stops = MutableProperty<[Stop]>([Stop]())
+    let stops = MutableProperty<[Stop?]>([Stop?]())
     let closestStopString = MutableProperty<String>("Loading...")
     let userLocation = MutableProperty<CLLocation>(CLLocation())
     
     init(service: StopService) {
         self.service = service
         
-        service.requestForStopsSignal().observeOn(QueueScheduler.mainQueueScheduler).start(Event.sink(error: { error in
+        service.requestForStopsStringSignal().observeOn(QueueScheduler.mainQueueScheduler).start(Event.sink(error: { error in
             
                 print("some error: \(error)")
             
-            }, next: { fileContents in
+            }, next: { [unowned self] fileContents in
                 
                 var lines = fileContents.componentsSeparatedByString("\n")
                 lines.removeFirst()
-                self.stops.value = lines.map { $0.toStop()! }
+                self.stops.value = lines.map { Stop.decode($0, line: self.service.line) } //i think an error can happen here, we should have a result handler
             }))
         
-        userLocation.producer.observeOn(QueueScheduler.mainQueueScheduler).startWithNext { newLocation in
+        userLocation.producer.observeOn(QueueScheduler.mainQueueScheduler).startWithNext { [weak self] newLocation in
             
-            func closestStop(stops: [Stop], toLocation ourLocation: CLLocation) -> Stop? {
+            func closestStop(stops: [Stop?], toLocation ourLocation: CLLocation) -> Stop? {
                 
                 var distance = DBL_MAX
                 var stopToReturn: Stop?
                 
                 for stop in stops {
-                    if ourLocation.distanceFromLocation(stop.location) < distance {
-                        distance = ourLocation.distanceFromLocation(stop.location)
-                        stopToReturn = stop
+                    if let stop = stop {
+                        if ourLocation.distanceFromLocation(stop.location) < distance {
+                            distance = ourLocation.distanceFromLocation(stop.location)
+                            stopToReturn = stop
+                        }
                     }
                 }
                 
                 return stopToReturn
             }
             
-            guard let stop = closestStop(self.stops.value, toLocation: newLocation) else {
-                self.closestStopString.value = "Errr"
+            guard let stop = closestStop(self!.stops.value, toLocation: newLocation) else {
+                self?.closestStopString.value = "Errr"
                 return
             }
             
-            self.closestStopString.value = stop.name
+            self?.closestStopString.value = stop.name
         }
     }
 }
@@ -240,11 +282,12 @@ Error handling
 enum MetroBurbErrorType: ErrorType {
     case StopFileParsingError,
         StopFileReadingError,
-        ClosestStopNotFound(location: CLLocation),
-        StopConversionFromStringError(param: LIRRParamColumn)
+        ClosestStopNotFound(location: CLLocation)
+//        StopConversionFromStringError(param: LIRRParamColumn)
 }
 
-
+//great article - http://artsy.github.io/blog/2015/09/24/mvvm-in-swift/
+//viewcontroller should NOT know about the model note to self
 class ViewController: UIViewController {
     
     
@@ -253,7 +296,7 @@ class ViewController: UIViewController {
     let manager = CLLocationManager()
     
     let stopViewModel: StopViewModel = {
-        let service = StopService()
+        let service = LocalTextStopService(line: Line.LIRR)
         return StopViewModel(service: service)
     }()
     
@@ -304,70 +347,6 @@ extension ViewController: CLLocationManagerDelegate {
         
         manager.stopUpdatingLocation()
         stopViewModel.userLocation.value = newLocation
-    }
-}
-
-
-/**
-Column for LIRR Parameter
-
-- ID:         Stop ID
-- Name:       Stop Name
-- Latitude:   Stop Latitude
-- Longitude:  Stop Longitude
-*/
-enum LIRRParamColumn: Int {
-    
-    case ID = 0
-    case Name = 1
-    case Latitude = 2
-    case Longitude = 3
-}
-
-
-// MARK: - Stop convenience conversion for String type
-extension String {
-    
-    
-    /**
-    Convert String to Stop. This addresses the need to parse the "stops.txt" 
-    The stops come on a single line in the format: "\"1\",\"Long Island City\",\"40.74128\",\"-73.95639\""
-    
-    - returns: Stop
-    */
-    func toStop() -> Stop? {
-        
-        func quoteStrippedString(s: String) -> String {
-            
-            let myString = s as NSString
-            return myString.substringWithRange(NSRange(location: 1, length: myString.length - 2))
-        }
-        
-        let a = self.componentsSeparatedByString(",")
-        let b = a.map { quoteStrippedString($0) }
-        
-        guard let id = Int(b[LIRRParamColumn.ID.rawValue]) else {
-//            throw MetroBurbErrorType.StopConversionFromStringError(param: .ID)
-            return .None
-        }
-        
-        guard let lat = Double(b[LIRRParamColumn.Latitude.rawValue]) else {
-//            throw MetroBurbErrorType.StopConversionFromStringError(param: .Latitude)
-            return .None
-        }
-        
-        guard let lon = Double(b[LIRRParamColumn.Longitude.rawValue]) else {
-//            throw MetroBurbErrorType.StopConversionFromStringError(param: .Longitude)
-            return .None
-        }
-        
-        //double lat double lon
-        
-        let name = b[LIRRParamColumn.Name.rawValue]
-        let loc = CLLocation(latitude: lat, longitude: lon)
-        
-        let stop = Stop(id: id, name: name, location: loc, line: .LIRR)
-        return stop
     }
 }
 
