@@ -34,6 +34,14 @@ func >>><A, B>(a: Result<A, ConcreteErrorType>, f: A -> Result<B, ConcreteErrorT
     }
 }
 
+//func >>><A, B>(a: Result<A, ConcreteErrorType>, f: A -> throws Result<B, ConcreteErrorType>) -> Result<B, ConcreteErrorType> {
+//    do {
+//        try f(x)
+//    } catch {
+//        return .Failure(error)
+//    }
+//}
+
 //fmap
 infix operator <^> { associativity left }
 
@@ -139,13 +147,76 @@ struct LIRRParsingStrategy: StopParsingStrategy {
             return myString.substringWithRange(NSRange(location: 1, length: myString.length - 2))
         }
         
+        let someContents: FileContents = 4
+        print("contents type \(NSNumber.self)")
+        
+        let mirror = Mirror(reflecting: someContents)
+        print("mirror type: \(mirror.subjectType)")
+        //how's it going to know which type to infer?
+        //someInt >>> fileContents -> how to know the intended type that we want to cast to?
+//        let result: Result<Int, ConcreteErrorType> = fileContents(someContents, type: Int.self)
+//        print("result value: \(result.value)")
+//        print("result error: \(result.error)")
+        
+        
+//        let rush = FileContentsParser<Int>().fileContents(contents)
+//        ru
+        
+//        let result = IntParser.fileContents(someContents)
+//        
+//        do {
+//            let result = try StringParser.fileContentsThrows(someContents)
+//        } catch {
+//            //somethign
+//        }
+        
+        
         let a = contents.componentsSeparatedByString(",")
         return a.map { quoteStrippedString($0) }
+        
+    }
+}
+
+typealias IntParser = FileContentsParser<Int>
+typealias StringParser = FileContentsParser<String>
+typealias DoubleParser = FileContentsParser<Double>
+
+/**
+*  THIS CAN WRAP THE FILE CONTENTS! now how to make this throwable? do we want to?
+*  not really a parser... more like a type caster?
+*/
+struct FileContentsParser<A> {
+    
+    static func fileContents(contents: FileContents) -> Result<A, ConcreteErrorType> {
+        if let contents = contents as? A {
+            return .Success(contents)
+        }
+        return .Failure(ConcreteErrorType())
+    }
+    
+    static func fileContentsThrows(contents: FileContents) throws -> Result<A, NoError> {
+        guard let contents = contents as? A else {
+            throw ConcreteErrorType()
+        }
+        return .Success(contents)
     }
 }
 
 
 //Parsing help
+//func fancyFileContentsInt(contents: FileContents) throws -> Result<Int, MetroBurbConcreteErrorType> {
+//    //
+//}
+
+//can we do a fileContents -> Result generalized function?
+func fileContents<A>(contents: FileContents, type: A.Type) -> Result<A, ConcreteErrorType> {
+    if let contents = contents as? A {
+        return .Success(contents)
+    }
+    return .Failure(ConcreteErrorType())
+}
+
+
 func fileContentsInt(contents: FileContents) -> Int? {
     return contents.integerValue
 }
