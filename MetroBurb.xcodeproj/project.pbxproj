@@ -7,17 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		065543C61BB9D4DD00674DA1 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 065543C51BB9D4DD00674DA1 /* data */; settings = {ASSET_TAGS = (); }; };
-		069BFB191BB998F70044539F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB181BB998F70044539F /* AppDelegate.swift */; };
-		069BFB1B1BB998F70044539F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB1A1BB998F70044539F /* ViewController.swift */; };
+		0637AC9A1BDEBF60001C4FB4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC951BDEBF60001C4FB4 /* ViewController.swift */; };
+		0637AC9B1BDEBF60001C4FB4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */; };
+		0637AC9E1BDEBFD8001C4FB4 /* ParsingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */; };
+		0637ACA11BDEC09D001C4FB4 /* StopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACA01BDEC09D001C4FB4 /* StopService.swift */; };
+		0637ACA31BDEC12E001C4FB4 /* LocalTextStopService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACA21BDEC12E001C4FB4 /* LocalTextStopService.swift */; };
+		0637ACA61BDEC975001C4FB4 /* StopViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACA51BDEC975001C4FB4 /* StopViewModel.swift */; };
+		0637ACA91BDECA5A001C4FB4 /* TextFileDecodeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACA81BDECA5A001C4FB4 /* TextFileDecodeable.swift */; };
+		0637ACAB1BDECA7B001C4FB4 /* Stop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACAA1BDECA7B001C4FB4 /* Stop.swift */; };
+		0637ACAD1BDECC18001C4FB4 /* CLLocation+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACAC1BDECC18001C4FB4 /* CLLocation+Helper.swift */; };
+		0637ACB01BDECCA6001C4FB4 /* StopParsingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACAF1BDECCA6001C4FB4 /* StopParsingStrategy.swift */; };
+		0637ACB21BDECCE3001C4FB4 /* LIRRParsingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACB11BDECCE3001C4FB4 /* LIRRParsingStrategy.swift */; };
+		0637ACB41BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACB31BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift */; };
+		0637ACB71BDECD75001C4FB4 /* MetroBurbError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACB61BDECD75001C4FB4 /* MetroBurbError.swift */; };
+		0637ACB91BDECDF5001C4FB4 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637ACB81BDECDF5001C4FB4 /* Line.swift */; };
+		065543C61BB9D4DD00674DA1 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 065543C51BB9D4DD00674DA1 /* data */; };
 		069BFB1E1BB998F70044539F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB1C1BB998F70044539F /* Main.storyboard */; };
 		069BFB201BB998F70044539F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB1F1BB998F70044539F /* Assets.xcassets */; };
 		069BFB231BB998F70044539F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069BFB211BB998F70044539F /* LaunchScreen.storyboard */; };
 		069BFB2E1BB998F70044539F /* MetroBurbTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB2D1BB998F70044539F /* MetroBurbTests.swift */; };
 		069BFB391BB998F70044539F /* MetroBurbUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069BFB381BB998F70044539F /* MetroBurbUITests.swift */; };
-		06B511851BBCD8B900E7C1AE /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */; settings = {ASSET_TAGS = (); }; };
 		06EA200F1BB9A269003C7171 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EA200E1BB9A269003C7171 /* CoreLocation.framework */; };
-		764CFE78A5A901B65AB47A0C /* Pods_MetroBurb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		764CFE78A5A901B65AB47A0C /* Pods_MetroBurb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D739211D1C90B3E72B059825 /* Pods_MetroBurb.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,10 +49,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0637AC951BDEBF60001C4FB4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParsingHelpers.swift; sourceTree = "<group>"; };
+		0637ACA01BDEC09D001C4FB4 /* StopService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StopService.swift; path = Class/Service/StopService.swift; sourceTree = "<group>"; };
+		0637ACA21BDEC12E001C4FB4 /* LocalTextStopService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocalTextStopService.swift; path = Class/Service/LocalTextStopService.swift; sourceTree = "<group>"; };
+		0637ACA51BDEC975001C4FB4 /* StopViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StopViewModel.swift; path = Class/ViewModel/StopViewModel.swift; sourceTree = "<group>"; };
+		0637ACA81BDECA5A001C4FB4 /* TextFileDecodeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextFileDecodeable.swift; path = Class/Model/TextFileDecodeable.swift; sourceTree = "<group>"; };
+		0637ACAA1BDECA7B001C4FB4 /* Stop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stop.swift; path = Class/Model/Stop.swift; sourceTree = "<group>"; };
+		0637ACAC1BDECC18001C4FB4 /* CLLocation+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+Helper.swift"; sourceTree = "<group>"; };
+		0637ACAF1BDECCA6001C4FB4 /* StopParsingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StopParsingStrategy.swift; path = Class/Model/ParsingStrategy/StopParsingStrategy.swift; sourceTree = "<group>"; };
+		0637ACB11BDECCE3001C4FB4 /* LIRRParsingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LIRRParsingStrategy.swift; path = Class/Model/ParsingStrategy/LIRRParsingStrategy.swift; sourceTree = "<group>"; };
+		0637ACB31BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetroNorthParsingStrategy.swift; path = Class/Model/ParsingStrategy/MetroNorthParsingStrategy.swift; sourceTree = "<group>"; };
+		0637ACB61BDECD75001C4FB4 /* MetroBurbError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetroBurbError.swift; path = Class/Error/MetroBurbError.swift; sourceTree = "<group>"; };
+		0637ACB81BDECDF5001C4FB4 /* Line.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Line.swift; path = Class/Model/Line.swift; sourceTree = "<group>"; };
 		065543C51BB9D4DD00674DA1 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = SOURCE_ROOT; };
 		069BFB151BB998F70044539F /* MetroBurb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetroBurb.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		069BFB181BB998F70044539F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		069BFB1A1BB998F70044539F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		069BFB1D1BB998F70044539F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		069BFB1F1BB998F70044539F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		069BFB221BB998F70044539F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -52,7 +75,6 @@
 		069BFB341BB998F70044539F /* MetroBurbUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetroBurbUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		069BFB381BB998F70044539F /* MetroBurbUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetroBurbUITests.swift; sourceTree = "<group>"; };
 		069BFB3A1BB998F70044539F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
 		06EA200E1BB9A269003C7171 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		06EA20101BB9A2F1003C7171 /* StringConversion.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringConversion.playground; sourceTree = "<group>"; };
 		86FA9979B13A23EB94ECE4D8 /* Pods-MetroBurb.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetroBurb.release.xcconfig"; path = "Pods/Target Support Files/Pods-MetroBurb/Pods-MetroBurb.release.xcconfig"; sourceTree = "<group>"; };
@@ -87,6 +109,80 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0637AC941BDEBF60001C4FB4 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0637AC951BDEBF60001C4FB4 /* ViewController.swift */,
+			);
+			name = Controller;
+			path = Class/Controller;
+			sourceTree = "<group>";
+		};
+		0637AC961BDEBF60001C4FB4 /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */,
+			);
+			name = Delegate;
+			path = Class/Delegate;
+			sourceTree = "<group>";
+		};
+		0637AC981BDEBF60001C4FB4 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */,
+				0637ACAC1BDECC18001C4FB4 /* CLLocation+Helper.swift */,
+			);
+			name = Util;
+			path = Class/Util;
+			sourceTree = "<group>";
+		};
+		0637AC9F1BDEC071001C4FB4 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				0637ACA01BDEC09D001C4FB4 /* StopService.swift */,
+				0637ACA21BDEC12E001C4FB4 /* LocalTextStopService.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
+		0637ACA41BDEC956001C4FB4 /* View Model */ = {
+			isa = PBXGroup;
+			children = (
+				0637ACA51BDEC975001C4FB4 /* StopViewModel.swift */,
+			);
+			name = "View Model";
+			sourceTree = "<group>";
+		};
+		0637ACA71BDECA3B001C4FB4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0637ACAE1BDECC7A001C4FB4 /* Parsing Strategy */,
+				0637ACA81BDECA5A001C4FB4 /* TextFileDecodeable.swift */,
+				0637ACAA1BDECA7B001C4FB4 /* Stop.swift */,
+				0637ACB81BDECDF5001C4FB4 /* Line.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		0637ACAE1BDECC7A001C4FB4 /* Parsing Strategy */ = {
+			isa = PBXGroup;
+			children = (
+				0637ACAF1BDECCA6001C4FB4 /* StopParsingStrategy.swift */,
+				0637ACB11BDECCE3001C4FB4 /* LIRRParsingStrategy.swift */,
+				0637ACB31BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift */,
+			);
+			name = "Parsing Strategy";
+			sourceTree = "<group>";
+		};
+		0637ACB51BDECD5C001C4FB4 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				0637ACB61BDECD75001C4FB4 /* MetroBurbError.swift */,
+			);
+			name = Error;
+			sourceTree = "<group>";
+		};
 		069BFB0C1BB998F70044539F = {
 			isa = PBXGroup;
 			children = (
@@ -112,15 +208,19 @@
 		069BFB171BB998F70044539F /* MetroBurb */ = {
 			isa = PBXGroup;
 			children = (
-				065543C51BB9D4DD00674DA1 /* data */,
-				069BFB181BB998F70044539F /* AppDelegate.swift */,
-				069BFB1A1BB998F70044539F /* ViewController.swift */,
+				0637AC941BDEBF60001C4FB4 /* Controller */,
+				0637AC961BDEBF60001C4FB4 /* Delegate */,
+				0637ACB51BDECD5C001C4FB4 /* Error */,
+				0637ACA71BDECA3B001C4FB4 /* Model */,
+				0637AC9F1BDEC071001C4FB4 /* Service */,
+				0637AC981BDEBF60001C4FB4 /* Util */,
+				0637ACA41BDEC956001C4FB4 /* View Model */,
+				069BFB241BB998F70044539F /* Info.plist */,
+				069BFB211BB998F70044539F /* LaunchScreen.storyboard */,
 				069BFB1C1BB998F70044539F /* Main.storyboard */,
 				069BFB1F1BB998F70044539F /* Assets.xcassets */,
-				069BFB211BB998F70044539F /* LaunchScreen.storyboard */,
-				069BFB241BB998F70044539F /* Info.plist */,
+				065543C51BB9D4DD00674DA1 /* data */,
 				06EA20101BB9A2F1003C7171 /* StringConversion.playground */,
-				06B511841BBCD8B900E7C1AE /* UIKitExtensions.swift */,
 			);
 			path = MetroBurb;
 			sourceTree = "<group>";
@@ -344,9 +444,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				069BFB1B1BB998F70044539F /* ViewController.swift in Sources */,
-				069BFB191BB998F70044539F /* AppDelegate.swift in Sources */,
-				06B511851BBCD8B900E7C1AE /* UIKitExtensions.swift in Sources */,
+				0637ACA91BDECA5A001C4FB4 /* TextFileDecodeable.swift in Sources */,
+				0637AC9B1BDEBF60001C4FB4 /* AppDelegate.swift in Sources */,
+				0637ACAB1BDECA7B001C4FB4 /* Stop.swift in Sources */,
+				0637ACB01BDECCA6001C4FB4 /* StopParsingStrategy.swift in Sources */,
+				0637ACB21BDECCE3001C4FB4 /* LIRRParsingStrategy.swift in Sources */,
+				0637AC9E1BDEBFD8001C4FB4 /* ParsingHelpers.swift in Sources */,
+				0637ACA31BDEC12E001C4FB4 /* LocalTextStopService.swift in Sources */,
+				0637ACB41BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift in Sources */,
+				0637ACA11BDEC09D001C4FB4 /* StopService.swift in Sources */,
+				0637ACB91BDECDF5001C4FB4 /* Line.swift in Sources */,
+				0637ACA61BDEC975001C4FB4 /* StopViewModel.swift in Sources */,
+				0637AC9A1BDEBF60001C4FB4 /* ViewController.swift in Sources */,
+				0637ACAD1BDECC18001C4FB4 /* CLLocation+Helper.swift in Sources */,
+				0637ACB71BDECD75001C4FB4 /* MetroBurbError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

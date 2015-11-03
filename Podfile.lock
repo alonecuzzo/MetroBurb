@@ -1,22 +1,13 @@
 PODS:
-  - ReactiveCocoa (4.0.2-alpha-1):
-    - ReactiveCocoa/UI (= 4.0.2-alpha-1)
-    - Result (~> 0.6-beta.1)
-  - ReactiveCocoa/Core (4.0.2-alpha-1):
-    - ReactiveCocoa/no-arc
-    - Result (~> 0.6-beta.1)
-  - ReactiveCocoa/no-arc (4.0.2-alpha-1):
-    - Result (~> 0.6-beta.1)
-  - ReactiveCocoa/UI (4.0.2-alpha-1):
-    - ReactiveCocoa/Core
-    - Result (~> 0.6-beta.1)
-  - Result (0.6.0-beta.3)
+  - Result (0.6.0-beta.5)
+  - RxSwift (2.0.0-beta.1)
 
 DEPENDENCIES:
-  - ReactiveCocoa (~> 4.0.2-alpha-1)
+  - Result (= 0.6.0-beta.5)
+  - RxSwift (= 2.0.0-beta.1)
 
 SPEC CHECKSUMS:
-  ReactiveCocoa: 652cf90e5de65708e7e2111f77405756da21aabe
-  Result: b80bca7becdda9a2e44c4fd65b4b4a7b5db4cf9a
+  Result: 8ae33a29ed1e147514b9536de523a978d7faba1f
+  RxSwift: a9b0f4d876eac130cda0ae2f3fba627be3baf3ef
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0
