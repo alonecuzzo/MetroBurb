@@ -47,6 +47,7 @@ extension ViewController {
         let internalAlertMessage = "We need this!"
         let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
             print("cancelled location")
+            //set default line for app
         }
         let svm = stopViewModel
         locationManager = MetroBurbCoreLocationManager(

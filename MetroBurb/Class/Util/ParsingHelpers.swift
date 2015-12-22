@@ -11,6 +11,7 @@ import Result
 import RxSwift
 import RxCocoa
 
+//TODO: Cleanup this file!!!
 
 typealias IntParser = FileContentsParser<Int>
 typealias StringParser = FileContentsParser<String>
