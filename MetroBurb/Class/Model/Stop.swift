@@ -35,3 +35,15 @@ struct Stop: TextFileDecodeable {
         }
     }
 }
+
+func fileContentsInt(contents: FileContents) -> Int? {
+    return contents.integerValue
+}
+
+func fileContentsString(contents: FileContents) -> String? {
+    return contents as? String
+}
+
+func fileContentsDouble(contents: FileContents) -> Double? {
+    return contents.doubleValue
+}

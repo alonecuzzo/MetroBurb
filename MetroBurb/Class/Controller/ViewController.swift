@@ -10,7 +10,8 @@ import UIKit
 import Darwin
 import Result
 import CoreLocation
-
+import RxSwift
+import RxCocoa
 
 //Decoding 
 infix operator >>> { associativity left precedence 150 }
@@ -166,13 +167,13 @@ func ?!<T>(optional: T?, @autoclosure error: () -> ErrorType) throws -> T {
 //    }
 //}
 
-extension Result {
-    
-    init(@noescape f:() throws -> T) {
-        do { self = .Success(try f()) }
-        catch { self = .Failure(error) }
-    }
-}
+//extension Result {
+//    
+//    init(@noescape f:() throws -> T) {
+//        do { self = .Success(try f()) }
+//        catch { self = Result.Failure(error) }
+//    }
+//}
 
 
 //fmap
@@ -187,7 +188,7 @@ func <^><A,B>(f: A -> B, a: A?) -> B? {
     }
 }
 
-func <^><A,B>(f: A -> Result<B, NoError>, a: Result<A, ConcreteErrorType>) throws -> Result<B, NoError> {
+func <^><A,B>(f: A -> Result<B, MetroBurbError>, a: Result<A, ConcreteErrorType>) throws -> Result<B, MetroBurbError> {
     switch a {
         case let .Success(x): return f(x)
         case let .Failure(error): throw error
@@ -206,7 +207,7 @@ func <*><A,B>(f: (A -> B)?, a: A?) -> B? {
     }
 }
 
-func <*><A,B>(f: A throws -> Result<B, NoError>, a: Result<A, ConcreteErrorType>) throws -> Result<B, NoError> {
+func <*><A,B>(f: A throws -> Result<B, MetroBurbError>, a: Result<A, ConcreteErrorType>) throws -> Result<B, MetroBurbError> {
     do {
         switch a {
         case let .Success(x): return try f(x)
@@ -217,6 +218,23 @@ func <*><A,B>(f: A throws -> Result<B, NoError>, a: Result<A, ConcreteErrorType>
     } catch {
         throw ConcreteErrorType() //should never hit this point
     }
+}
+
+
+infix operator <-> {
+}
+
+func <-> <T>(property: ControlProperty<T>, variable: Variable<T>) -> Disposable {
+    let bindToUIDisposable = variable
+        .bindTo(property)
+    let bindToVariable = property
+        .subscribe(onNext: { n in
+            variable.value = n
+            }, onCompleted:  {
+                bindToUIDisposable.dispose()
+        })
+    
+    return StableCompositeDisposable.create(bindToUIDisposable, bindToVariable)
 }
 
 
@@ -231,7 +249,7 @@ struct FileContentsParser<A> {
         return .Failure(ConcreteErrorType())
     }
     
-    static func fileContentsThrows(contents: FileContents) throws -> Result<A, NoError> {
+    static func fileContentsThrows(contents: FileContents) throws -> Result<A, MetroBurbError> {
         guard let contents = contents as? A else {
             throw ConcreteErrorType()
         }
@@ -247,6 +265,7 @@ class ViewController: UIViewController {
     //MARK: Property
     let MTA_API_TOKEN = "c7ed3e715a3e71f70e051cf0a80e4c3d"
     let manager = CLLocationManager()
+    let disposeBag = DisposeBag()
     
     let stopViewModel: StopViewModel = {
         let service = LocalTextStopService(line: Line.LIRR)
@@ -262,7 +281,9 @@ class ViewController: UIViewController {
         
         super.viewDidLoad()
         
-        stopNameLabel.rac_text <~ stopViewModel.closestStopString
+//        stopNameLabel.rac_text <~ stopViewModel.closestStopString
+//        stopNameLabel.rx_text <-> stopViewModel.closestStopString
+        stopViewModel.closestStopString.subscribeNext { [unowned self] in self.stopNameLabel.text = $0 }.addDisposableTo(disposeBag)
         
         manager.delegate = self
         if CLLocationManager.authorizationStatus() == .NotDetermined {

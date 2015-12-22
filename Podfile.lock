@@ -1,13 +1,17 @@
 PODS:
   - Result (0.6.0-beta.5)
-  - RxSwift (2.0.0-beta.1)
+  - RxCocoa (2.0.0-beta.3):
+    - RxSwift (~> 2.0.0-beta)
+  - RxSwift (2.0.0-beta.3)
 
 DEPENDENCIES:
   - Result (= 0.6.0-beta.5)
-  - RxSwift (= 2.0.0-beta.1)
+  - RxCocoa (= 2.0.0-beta.3)
+  - RxSwift (= 2.0.0-beta.3)
 
 SPEC CHECKSUMS:
   Result: 8ae33a29ed1e147514b9536de523a978d7faba1f
-  RxSwift: a9b0f4d876eac130cda0ae2f3fba627be3baf3ef
+  RxCocoa: 1472006304b296d03c847f78b21384523cc4902e
+  RxSwift: 19fbe885b404d1d36d42ac8535134739a9b42952
 
 COCOAPODS: 0.39.0
