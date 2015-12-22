@@ -43,20 +43,27 @@ class ViewController: UIViewController {
 // MARK: Location Setup
 extension ViewController {
     private func setupLocation() -> Void {
+        let internalAlertTitle = "Can we get your location?"
+        let internalAlertMessage = "We need this!"
+        let cancelHandler: UIAlertActionHandlerBlock = { action -> Void in
+            print("cancelled location")
+        }
         let svm = stopViewModel
         locationManager = MetroBurbCoreLocationManager(
             locationReceivedBlock: { (location) -> Void in
-               svm.userLocation.value = location!
+                guard let location = location else { return }
+                svm.userLocation.value = location
             },
             internalAlertBlock: { [weak self] (manager) -> Void in
                 dispatch_async(dispatch_get_main_queue()) {
-                    let alertController = UIAlertController(title: "Can we get your location?", message: "We need this!", preferredStyle: UIAlertControllerStyle.Alert)
+                    let alertController = UIAlertController(title: internalAlertTitle, message: internalAlertMessage, preferredStyle: UIAlertControllerStyle.Alert)
                     let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
                         manager.requestAlwaysAuthorization()
                     }
-                    let cancelAction = UIAlertAction(title: "Don't Allow", style: UIAlertActionStyle.Default, handler: nil)
+                    let cancelAction = UIAlertAction(title: "Don't Allow", style: UIAlertActionStyle.Default, handler: cancelHandler)
                     alertController.addAction(cancelAction)
                     alertController.addAction(defaultAction)
+                    manager.systemCancelAction = cancelHandler
                     self?.presentViewController(alertController, animated: true, completion: nil)
                 }
             })

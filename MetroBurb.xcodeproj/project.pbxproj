@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0603808F1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0603808E1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift */; };
+		060380911C29F59E00919F23 /* InternalCoreLocationAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060380901C29F59E00919F23 /* InternalCoreLocationAlertController.swift */; };
 		0637AC9A1BDEBF60001C4FB4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC951BDEBF60001C4FB4 /* ViewController.swift */; };
 		0637AC9B1BDEBF60001C4FB4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */; };
 		0637AC9E1BDEBFD8001C4FB4 /* ParsingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		0603808E1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetroBurbCoreLocationManager.swift; path = Class/Location/MetroBurbCoreLocationManager.swift; sourceTree = "<group>"; };
+		060380901C29F59E00919F23 /* InternalCoreLocationAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalCoreLocationAlertController.swift; sourceTree = "<group>"; };
 		0637AC951BDEBF60001C4FB4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParsingHelpers.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				0637AC951BDEBF60001C4FB4 /* ViewController.swift */,
+				060380901C29F59E00919F23 /* InternalCoreLocationAlertController.swift */,
 			);
 			name = Controller;
 			path = Class/Controller;
@@ -470,6 +473,7 @@
 				0637AC9A1BDEBF60001C4FB4 /* ViewController.swift in Sources */,
 				0637ACAD1BDECC18001C4FB4 /* CLLocation+Helper.swift in Sources */,
 				0637ACB71BDECD75001C4FB4 /* MetroBurbError.swift in Sources */,
+				060380911C29F59E00919F23 /* InternalCoreLocationAlertController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
