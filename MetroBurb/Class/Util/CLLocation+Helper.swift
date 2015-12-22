@@ -11,7 +11,6 @@ import CoreLocation
 
 // MARK: - Convenience curried CLLocation creation.
 extension CLLocation {
-    
     static func create(lat: Double?)(lon: Double?) -> CLLocation? {
         if let lat = lat, lon = lon {
             return CLLocation(latitude: lat, longitude: lon)

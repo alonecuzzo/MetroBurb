@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0603808F1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0603808E1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift */; };
 		0637AC9A1BDEBF60001C4FB4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC951BDEBF60001C4FB4 /* ViewController.swift */; };
 		0637AC9B1BDEBF60001C4FB4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */; };
 		0637AC9E1BDEBFD8001C4FB4 /* ParsingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0603808E1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetroBurbCoreLocationManager.swift; path = Class/Location/MetroBurbCoreLocationManager.swift; sourceTree = "<group>"; };
 		0637AC951BDEBF60001C4FB4 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0637AC971BDEBF60001C4FB4 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0637AC9D1BDEBFD8001C4FB4 /* ParsingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParsingHelpers.swift; sourceTree = "<group>"; };
@@ -109,6 +111,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0603808D1C29B7D700919F23 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				0603808E1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
 		0637AC941BDEBF60001C4FB4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -208,6 +218,7 @@
 		069BFB171BB998F70044539F /* MetroBurb */ = {
 			isa = PBXGroup;
 			children = (
+				0603808D1C29B7D700919F23 /* Location */,
 				0637AC941BDEBF60001C4FB4 /* Controller */,
 				0637AC961BDEBF60001C4FB4 /* Delegate */,
 				0637ACB51BDECD5C001C4FB4 /* Error */,
@@ -450,6 +461,7 @@
 				0637ACB01BDECCA6001C4FB4 /* StopParsingStrategy.swift in Sources */,
 				0637ACB21BDECCE3001C4FB4 /* LIRRParsingStrategy.swift in Sources */,
 				0637AC9E1BDEBFD8001C4FB4 /* ParsingHelpers.swift in Sources */,
+				0603808F1C29B80D00919F23 /* MetroBurbCoreLocationManager.swift in Sources */,
 				0637ACA31BDEC12E001C4FB4 /* LocalTextStopService.swift in Sources */,
 				0637ACB41BDECD19001C4FB4 /* MetroNorthParsingStrategy.swift in Sources */,
 				0637ACA11BDEC09D001C4FB4 /* StopService.swift in Sources */,
