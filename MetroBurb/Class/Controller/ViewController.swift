@@ -33,34 +33,33 @@ class ViewController: UIViewController {
     //MARK: Method
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupLocation()
+        stopViewModel.closestStopString.subscribeNext { [unowned self] in
+            self.stopNameLabel.text = $0
+            }.addDisposableTo(disposeBag)
+    }
+}
+
+// MARK: Location Setup
+extension ViewController {
+    private func setupLocation() -> Void {
         let svm = stopViewModel
-        
-        //so what happens when they allow u to use location
         locationManager = MetroBurbCoreLocationManager(
             locationReceivedBlock: { (location) -> Void in
                svm.userLocation.value = location!
             },
             internalAlertBlock: { [weak self] (manager) -> Void in
-                
-                dispatch_async(dispatch_get_main_queue()) { 
+                dispatch_async(dispatch_get_main_queue()) {
                     let alertController = UIAlertController(title: "Can we get your location?", message: "We need this!", preferredStyle: UIAlertControllerStyle.Alert)
                     let defaultAction = UIAlertAction(title: "Allow", style: UIAlertActionStyle.Default) { action -> Void in
-                        //do something
                         manager.requestAlwaysAuthorization()
                     }
-                    
                     let cancelAction = UIAlertAction(title: "Don't Allow", style: UIAlertActionStyle.Default, handler: nil)
                     alertController.addAction(cancelAction)
                     alertController.addAction(defaultAction)
-                    // something needs to present the alert
                     self?.presentViewController(alertController, animated: true, completion: nil)
                 }
             })
-        
-        stopViewModel.closestStopString.subscribeNext { [unowned self] in
-            self.stopNameLabel.text = $0
-            }.addDisposableTo(disposeBag)
     }
 }
 
