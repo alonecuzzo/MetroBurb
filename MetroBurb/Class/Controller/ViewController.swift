@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     
     func testDB() -> Void {
         let service = SQLiteStopService(line: .LIRR)
-        service.getStop(23).subscribeNext { next -> Void in
+        service.getStop(24).subscribeNext { next -> Void in //penn station
             //should get a stop here
             print("got it")
         }.addDisposableTo(disposeBag)

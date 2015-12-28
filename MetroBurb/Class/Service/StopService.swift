@@ -73,16 +73,66 @@ class SQLiteStopService: StopServiceProtocol {
         //should these be responsible for transformations?
         //really we just return Stop.decode() -> so we need something that can decode these
 //        let stop
+        
+        //select * from stop_times where departure_time (is within 5 minutes) AND stop_id == 1
+        
+        let stopTimes = Table("stop_times")
+        let alias = stopTimes.alias("myAlias")
+        let tripID = Expression<String>("trip_id")
+        let stopID = Expression<String>("stop_id")
+//        let departureTime = Expression<NSDate>("departure_time")
+        let startStopAlias = stopTimes.alias("startStopAlias")
+        let endStopAlias = stopTimes.alias("endStopAlias")
+        
+        let startStopQuery = startStopAlias
+            .filter(startStopAlias[stopID] == String(id))
+        
+        let endStopQuery = endStopAlias
+            .filter(endStopAlias[stopID] == "25")
+//        let tripIDAlias = endStopQuery.alias("stop_times")
+        
+        let departureTime = Expression<NSDate>("departure_time")
+        //this returns distinct tripids
+        let query = startStopQuery.select(startStopQuery[tripID].distinct, startStopQuery[departureTime]).join(endStopAlias, on: endStopAlias[tripID] == startStopQuery[tripID])
+//        let query2 = query.filter(endStopAlias[stopID] == "25").filter(startStopQuery[departureTime] > NSDate()).order(startStopQuery[departureTime].asc)//this right here is giving us stops 24 & 25, little neck and great neck with departure times of whatever
+        let query2 = query.filter(startStopQuery[departureTime] > NSDate()).order(startStopQuery[departureTime].asc)//this is giving us all of the trip ids with stopid 24 in it
+        
+        //now from this query, all we need is the departure time at that is close to the current time
+        
+        
+        //departure times for start station
+        //do we make a new query with these trip ids?
+        let departureTimeQuery = query2.select(departureTime)
+        
+        //great neck = 25
+        
+        
+        print("startStopQuery[tripID]: \(startStopQuery[stopID])")
+        print("endStopQuery[tripID]: \(endStopQuery[stopID])")
+        print("tripID: \(tripID)")
+        print("startStopQuery[tripID]: \(startStopQuery[tripID])")
+        print("endStopQuery[tripID]: \(endStopQuery[tripID])")
+        
+        print("startStopAlias[tripID]: \(startStopAlias[tripID])")
+        print("endStopAlias[tripID]: \(endStopAlias[tripID])")
+        
+        print("alias[tripID]: \(alias[tripID])")
+        print("query \(query.asSQL())")
+        print("query2 \(query2.asSQL())")
+        
+        //that's the starting query, then we need to check from these trips, which end in the station that we want
+        
+//            .filter(NSDate(timeIntervalSinceNow: departureTime) < (60 * 60)) //1 hour
+        
         return create { [weak self] observer in
-            let queryId = Expression<String>("stop_id")
 //            let idToCompare = Expression<Int64>(value: Int64(id))
 //            let stopQuery = self?.stops.filter(queryId == 1)
-            let s = self?.stops.filter(queryId == String(id))
+//            let s = self?.stops.filter(queryId == String(id))
 //            for stop in (self?.db.prepare((self?.stops)!))! {
 //                print("stop: \(stop[queryId])")
 //            }
-            for stop in (self?.db.prepare(s!))! {
-                print("id: \(stop[queryId])")
+            for stop in (self?.db.prepare(query2))! {
+                print("id: \(stop)")
             }
             return NopDisposable.instance
         }
