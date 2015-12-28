@@ -32,3 +32,9 @@ extension Line {
         }
     }
 }
+
+extension Line {
+    var localDBDirectory: String {
+        return "data/lirr/db"
+    }
+}

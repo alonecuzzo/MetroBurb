@@ -37,6 +37,15 @@ class ViewController: UIViewController {
         stopViewModel.closestStopString.subscribeNext { [unowned self] in
             self.stopNameLabel.text = $0
             }.addDisposableTo(disposeBag)
+        testDB()
+    }
+    
+    func testDB() -> Void {
+        let service = SQLiteStopService(line: .LIRR)
+        service.getStop(23).subscribeNext { next -> Void in
+            //should get a stop here
+            print("got it")
+        }.addDisposableTo(disposeBag)
     }
 }
 

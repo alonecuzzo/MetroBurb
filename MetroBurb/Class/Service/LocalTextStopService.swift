@@ -16,6 +16,7 @@ public struct LocalTextStopService: StopService {
     
     let line: Line
     
+    //wrong this is a request for the closest stop...
     public func requestForStopsStringSignal() -> Observable<String> {
         
         return create { observer in

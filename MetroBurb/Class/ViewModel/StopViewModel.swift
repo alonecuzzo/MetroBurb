@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import RxSwift
 
-
+// this should really be named the closest stop view model, since that's really what it's all about - we only want to use this for the closest stop
 class StopViewModel {
     
     //MARK: Property
@@ -20,10 +20,10 @@ class StopViewModel {
     let userLocation = Variable(CLLocation())
     let disposeBag = DisposeBag()
     
+    
     //MARK: Method
     init(service: StopService) {
         self.service = service
-        
         service.requestForStopsStringSignal().subscribeOn(MainScheduler.sharedInstance).subscribeNext { fileContentsString in
                 var lines = fileContentsString.componentsSeparatedByString("\n")
                 lines.removeFirst()
