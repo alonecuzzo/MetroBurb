@@ -8,6 +8,7 @@ pod 'RxCocoa', '2.0.0-beta.3'
 pod 'RxSwift', '2.0.0-beta.3'
 pod 'Result', '0.6.0-beta.5'
 pod 'SQLite.swift', git: 'https://github.com/stephencelis/SQLite.swift.git'
+pod 'UIColor_Hex_Swift', '~> 1.8'
 
 end
 

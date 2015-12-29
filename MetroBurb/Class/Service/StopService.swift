@@ -25,11 +25,11 @@ struct Location {
 }
 
 //there's a trip
-struct Trip {
-    let tripID: String
-    let tripHeadSign: String //"Penn Station", "Bablyon" etc
-    let directionID: Int //1 means going out, 0 means coming in
-}
+//struct Trip {
+//    let tripID: String
+//    let tripHeadSign: String //"Penn Station", "Bablyon" etc
+//    let directionID: Int //1 means going out, 0 means coming in
+//}
 
 //1. can we get all of the trips for a stop
 //2. can we then get all of the trips at a stop with a departure time within an hour
@@ -156,6 +156,37 @@ class SQLiteStopService: StopServiceProtocol {
     }
     
     
+}
+
+
+enum TripType {
+    case Local, Express
+}
+
+struct Trip {
+    let departureTime: String
+    let arrivalTime: String
+    let tripType: TripType
+}
+
+//make a fake
+class FakeTrips {
+   
+    class func trips() -> Observable<[Trip]> {
+        return just([
+            Trip(departureTime: "8:23", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:04", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:11", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:43", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:55", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "10:13", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "10:23", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "10:42", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "10:55", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "11:29", arrivalTime: "10:45", tripType: .Local)
+            ])
+    }
 }
 
 
