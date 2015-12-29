@@ -63,7 +63,7 @@ class ViewController: UIViewController {
            let cell = self.tableView.dequeueReusableCellWithIdentifier(self.CellIdentifier) as! TripTableViewCell
 //            cell.textLabel?.text = trip.departureTime
             let timeAttribute = [
-                NSFontAttributeName : UIFont(name: helveticaNeueLightString, size: 25.0)!
+                NSFontAttributeName : UIFont(name: helveticaNeueLightString, size: 30.0)!
             ]
             let suffixAttribute = [
                 NSFontAttributeName : UIFont(name: helveticaNeueLightString, size: 15.0)!]
@@ -75,8 +75,9 @@ class ViewController: UIViewController {
             txt.addAttributes(suffixAttribute, range: NSRange(location: trip.departureTime.characters.count, length: 1))
             txt.addAttributes(suffixAttribute, range: NSRange(location: timeString.characters.count - 1, length: 1))
             txt.addAttributes(arrivalTimeAttribute, range: NSRange(location: timeString.characters.count - 1 - trip.arrivalTime.characters.count, length: trip.arrivalTime.characters.count))
-            cell.textLabel?.attributedText = txt
+            cell.tripTimeLabel.attributedText = txt
             
+            cell.tripTypeLabel.text = trip.tripType.description
             
             return cell
         }.addDisposableTo(disposeBag)
@@ -93,6 +94,16 @@ class ViewController: UIViewController {
 
 
 class TripTableViewCell: UITableViewCell {
+    
+    let tripTypeLabel = UILabel()
+    let tripTimeLabel = UILabel()
+    let lightBackgroundView = UIView()
+    let progressBar = UIView()
+    
+    let halfwayMarker = UIView()
+    let twoThirdsMarker = UIView()
+    let oneThirdMarker = UIView()
+    
     //gonna need attributed strings for formatting
     //progress bar at bottom
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -107,13 +118,48 @@ class TripTableViewCell: UITableViewCell {
     
     private func setup() -> Void {
         self.backgroundColor = UIColor(rgba: "#2C2D34")
-        self.textLabel?.textColor = UIColor(rgba: "#F7F7F7")
+        self.tripTimeLabel.textColor = UIColor(rgba: "#FFFFFF")
         self.selectionStyle = UITableViewCellSelectionStyle.None
+        tripTypeLabel.textAlignment = NSTextAlignment.Right
+        lightBackgroundView.addSubview(tripTypeLabel)
+        tripTypeLabel.textColor = UIColor(rgba: "#BFBFBF")
+        tripTypeLabel.font = UIFont(name: "HelveticaNeue-Light", size: 14)
+        contentView.addSubview(lightBackgroundView)
+        lightBackgroundView.backgroundColor = UIColor(rgba: "#40414A")
+        lightBackgroundView.addSubview(tripTimeLabel)
+        lightBackgroundView.addSubview(progressBar)
+        progressBar.backgroundColor = UIColor(rgba: "#C2606F")
+        halfwayMarker.backgroundColor = backgroundColor
+        twoThirdsMarker.backgroundColor = backgroundColor
+        oneThirdMarker.backgroundColor = backgroundColor
+        lightBackgroundView.addSubview(halfwayMarker)
+        lightBackgroundView.addSubview(twoThirdsMarker)
+        lightBackgroundView.addSubview(oneThirdMarker)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        let labelWidth: CGFloat = 100
+        let labelHeight: CGFloat = 50
+        tripTypeLabel.frame = CGRect(x: contentView.frame.size.width - labelWidth - 15, y: (contentView.frame.height / 2) - (labelHeight / 2) - 8, width: labelWidth, height: labelHeight)
+        
+        tripTimeLabel.frame = CGRect(x: 15, y: -10, width: contentView.frame.width - 25, height: 60)
+        lightBackgroundView.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 60)
+        
+        let progressBarHeight: CGFloat = 3
+        progressBar.frame = CGRect(x: 0, y: lightBackgroundView.frame.height - progressBarHeight, width: lightBackgroundView.frame.width, height: progressBarHeight)
+        
+        let markerSize = CGSize(width: 3, height: progressBarHeight)
+        let markerY = lightBackgroundView.frame.height - markerSize.height
+        
+        halfwayMarker.center.x = lightBackgroundView.center.x
+        halfwayMarker.frame.origin.y = markerY
+        halfwayMarker.frame.size = markerSize
+        
+        twoThirdsMarker.frame = CGRect(origin: CGPoint(x: (3/4) * lightBackgroundView.frame.width, y: markerY), size: markerSize)
+        oneThirdMarker.frame = CGRect(origin: CGPoint(x: (1/4) * lightBackgroundView.frame.width, y: markerY), size: markerSize)
     }
+    
     
 }
 

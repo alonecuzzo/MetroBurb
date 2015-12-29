@@ -159,8 +159,17 @@ class SQLiteStopService: StopServiceProtocol {
 }
 
 
-enum TripType {
+enum TripType: CustomStringConvertible {
     case Local, Express
+    
+    var description: String {
+        switch self {
+        case .Local:
+            return "Local"
+        case .Express:
+            return "Express"
+        }
+    }
 }
 
 struct Trip {
@@ -175,15 +184,15 @@ class FakeTrips {
     class func trips() -> Observable<[Trip]> {
         return just([
             Trip(departureTime: "8:23", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "9:04", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "9:11", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:04", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "9:11", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "9:43", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "9:55", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "10:13", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "9:55", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "10:13", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "10:23", arrivalTime: "10:45", tripType: .Local),
             Trip(departureTime: "10:42", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "10:55", arrivalTime: "10:45", tripType: .Local),
-            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Local),
+            Trip(departureTime: "10:55", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "11:29", arrivalTime: "10:45", tripType: .Local)
             ])
     }
