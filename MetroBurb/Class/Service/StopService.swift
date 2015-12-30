@@ -193,6 +193,10 @@ class FakeTrips {
             Trip(departureTime: "10:42", arrivalTime: "10:45", tripType: .Local),
             Trip(departureTime: "10:55", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
+            Trip(departureTime: "11:03", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "11:29", arrivalTime: "10:45", tripType: .Local)
             ])
     }

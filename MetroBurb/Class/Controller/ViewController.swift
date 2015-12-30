@@ -26,7 +26,9 @@ class ViewController: UIViewController {
         return StopViewModel(service: service)
     }()
     
-    let tableView: UITableView = UITableView()
+    let headerView = UIView()
+    
+    let tableView = UITableView()
     
     //debug
     var stopNameLabel = UILabel(frame: CGRect(x: 20, y: 70, width: 300, height: 60))
@@ -37,13 +39,14 @@ class ViewController: UIViewController {
     //MARK: Method
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = darkGray
+        view.backgroundColor = UIColor(rgba: "#0F0F0F")
         setupLocation()
         stopViewModel.closestStopString.subscribeNext { [unowned self] in
             self.stopNameLabel.text = $0
             }.addDisposableTo(disposeBag)
         setupTableView()
         stopNameLabel.hidden = true
+        setupHeaderView()
 //        testDB()
     }
     
@@ -51,13 +54,30 @@ class ViewController: UIViewController {
         return true
     }
     
+    private func setupHeaderView() -> Void {
+        headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: headerHeight)
+        headerView.alpha = 0.97
+        headerView.backgroundColor = UIColor(rgba: "#2C2D34")
+        
+        let startStationLabel = UILabel(frame: CGRect(x: 20, y: 10, width: 150, height: 50))
+        startStationLabel.text = "Great Neck"
+        startStationLabel.font = UIFont(name: "HelveticaNeue", size: 20)
+        startStationLabel.textColor = UIColor.whiteColor()
+        headerView.addSubview(startStationLabel)
+        
+        view.addSubview(headerView)
+    }
+    
+    let headerHeight: CGFloat = 120
+    
     func setupTableView() -> Void {
         view.addSubview(tableView)
         tableView.registerClass(TripTableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
         tableView.frame = view.frame
-        tableView.rowHeight = 63
+        tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 0, right: 0)
+        tableView.rowHeight = 50
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        tableView.backgroundColor = darkGray
+        tableView.backgroundColor = UIColor(rgba: "#0F0F0F")
         let helveticaNeueLightString = "HelveticaNeue-Light"
         FakeTrips.trips().asDriver(onErrorJustReturn: []).drive(tableView.rx_itemsWithCellFactory) { [unowned self] (tv, idx, trip) -> UITableViewCell in
            let cell = self.tableView.dequeueReusableCellWithIdentifier(self.CellIdentifier) as! TripTableViewCell
@@ -141,10 +161,10 @@ class TripTableViewCell: UITableViewCell {
         super.layoutSubviews()
         let labelWidth: CGFloat = 100
         let labelHeight: CGFloat = 50
-        tripTypeLabel.frame = CGRect(x: contentView.frame.size.width - labelWidth - 15, y: (contentView.frame.height / 2) - (labelHeight / 2) - 8, width: labelWidth, height: labelHeight)
+        tripTypeLabel.frame = CGRect(x: contentView.frame.size.width - labelWidth - 15, y: (contentView.frame.height / 2) - (labelHeight / 2) - 4, width: labelWidth, height: labelHeight)
         
         tripTimeLabel.frame = CGRect(x: 15, y: -10, width: contentView.frame.width - 25, height: 60)
-        lightBackgroundView.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 60)
+        lightBackgroundView.frame = CGRect(x: 0, y: 0, width: contentView.frame.width, height: 46)
         
         let progressBarHeight: CGFloat = 3
         progressBar.frame = CGRect(x: 0, y: lightBackgroundView.frame.height - progressBarHeight, width: lightBackgroundView.frame.width, height: progressBarHeight)
