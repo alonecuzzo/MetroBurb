@@ -24,13 +24,13 @@ class StopViewModel {
     //MARK: Method
     init(service: StopService) {
         self.service = service
-        service.requestForStopsStringSignal().subscribeOn(MainScheduler.sharedInstance).subscribeNext { fileContentsString in
+        service.requestForStopsStringSignal().subscribeOn(MainScheduler.instance).subscribeNext { fileContentsString in
                 var lines = fileContentsString.componentsSeparatedByString("\n")
                 lines.removeFirst()
                 self.stops.value = lines.map { Stop.decode($0, line: self.service.line) } //i think an error can happen here, we should have a result handler
         }.addDisposableTo(disposeBag)
         
-        userLocation.observeOn(MainScheduler.sharedInstance).subscribeNext { [unowned self] newLocation in
+        userLocation.asObservable().observeOn(MainScheduler.instance).subscribeNext { [unowned self] newLocation in
             
             func closestStop(stops: [Stop?], toLocation ourLocation: CLLocation) -> Stop? {
                 

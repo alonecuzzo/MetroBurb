@@ -19,7 +19,7 @@ public struct LocalTextStopService: StopService {
     //wrong this is a request for the closest stop...
     public func requestForStopsStringSignal() -> Observable<String> {
         
-        return create { observer in
+        return Observable.create { observer in
             let filePath = NSBundle.mainBundle().pathForResource("stops", ofType: "txt", inDirectory: self.line.localTextStorageDirectory())
             let contents: NSString?
             do {

@@ -49,10 +49,11 @@ class MetroBurbCoreLocationManager {
             }
             .addDisposableTo(disposeBag)
         
-        locationManager.rx_didChangeAuthorizationStatus.subscribeNext { [weak self] status -> Void in
-            guard let status = status else { return }
+        
+        locationManager.rx_didChangeAuthorizationStatus.asObservable().subscribeNext { [weak self] status -> Void in
+//            guard let myStatus = status else { return }
             switch status {
-            case .Denied, .Restricted:
+            case CLAuthorizationStatus.Denied, CLAuthorizationStatus.Restricted:
                 self?.systemCancelAction?(UIAlertAction()) //we don't need an alert action - change signature
             default:
                 self?.startUpdatingLocationIfAuthorized(status)

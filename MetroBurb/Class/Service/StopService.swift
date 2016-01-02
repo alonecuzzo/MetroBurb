@@ -124,7 +124,7 @@ class SQLiteStopService: StopServiceProtocol {
         
 //            .filter(NSDate(timeIntervalSinceNow: departureTime) < (60 * 60)) //1 hour
         
-        return create { [weak self] observer in
+        return Observable.create { [weak self] observer in
 //            let idToCompare = Expression<Int64>(value: Int64(id))
 //            let stopQuery = self?.stops.filter(queryId == 1)
 //            let s = self?.stops.filter(queryId == String(id))
@@ -140,7 +140,7 @@ class SQLiteStopService: StopServiceProtocol {
     
     func getStop(location: Location) -> Observable<Stop> {
         
-        return create { observer in
+        return Observable.create { observer in
            
             return NopDisposable.instance
         }
@@ -149,7 +149,7 @@ class SQLiteStopService: StopServiceProtocol {
     
     func getStop(name: String) -> Observable<Stop> {
         
-        return create { observer in
+        return Observable.create { observer in
            
             return NopDisposable.instance
         }
@@ -182,7 +182,7 @@ struct Trip {
 class FakeTrips {
    
     class func trips() -> Observable<[Trip]> {
-        return just([
+        return Observable.just([
             Trip(departureTime: "8:23", arrivalTime: "10:45", tripType: .Local),
             Trip(departureTime: "9:04", arrivalTime: "10:45", tripType: .Express),
             Trip(departureTime: "9:11", arrivalTime: "10:45", tripType: .Express),

@@ -41,7 +41,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(rgba: "#0F0F0F")
         setupLocation()
-        stopViewModel.closestStopString.subscribeNext { [unowned self] in
+        stopViewModel.closestStopString.asObservable().subscribeNext { [unowned self] in
             self.stopNameLabel.text = $0
             }.addDisposableTo(disposeBag)
         setupTableView()
