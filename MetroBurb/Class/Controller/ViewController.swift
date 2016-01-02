@@ -59,16 +59,31 @@ class ViewController: UIViewController {
         headerView.alpha = 0.97
         headerView.backgroundColor = UIColor(rgba: "#2C2D34")
         
-        let startStationLabel = UILabel(frame: CGRect(x: 20, y: 10, width: 150, height: 50))
+        let labelHeight: CGFloat = 50
+        let labelY: CGFloat = (headerHeight / 2) - (labelHeight / 2)
+        let startStationLabel = UILabel(frame: CGRect(x: 20, y: labelY, width: 150, height: 50))
         startStationLabel.text = "Great Neck"
         startStationLabel.font = UIFont(name: "HelveticaNeue", size: 20)
         startStationLabel.textColor = UIColor.whiteColor()
         headerView.addSubview(startStationLabel)
+       
+        let endStationLabel = UILabel(frame: CGRect(x: 200, y: labelY, width: 150, height: labelHeight))
+        endStationLabel.text = "Penn Station"
+        endStationLabel.font = startStationLabel.font
+        endStationLabel.textColor = startStationLabel.textColor
+        endStationLabel.textAlignment = NSTextAlignment.Right
+        headerView.addSubview(endStationLabel)
+        
+        let swapButton = UIButton(type: UIButtonType.Custom)
+        swapButton.setBackgroundImage(UIImage(named: "swapButton"), forState: UIControlState.Normal)
+        swapButton.frame.size = CGSize(width: 20, height: 22)
+        swapButton.center = headerView.center
+        headerView.addSubview(swapButton)
         
         view.addSubview(headerView)
     }
     
-    let headerHeight: CGFloat = 120
+    let headerHeight: CGFloat = 80
     
     func setupTableView() -> Void {
         view.addSubview(tableView)
