@@ -7,7 +7,7 @@ target 'MetroBurb' do
 pod 'RxCocoa', '2.0.0'
 pod 'RxSwift', '2.0.0'
 pod 'Result', '1.0.1'
-pod 'SQLite.swift', git: 'https://github.com/stephencelis/SQLite.swift.git'
+pod 'SQLite.swift', '~> 0.10.1'
 pod 'UIColor_Hex_Swift', '~> 1.8'
 
 end

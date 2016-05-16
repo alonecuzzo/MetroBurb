@@ -3,30 +3,21 @@ PODS:
   - RxCocoa (2.0.0):
     - RxSwift (~> 2.0)
   - RxSwift (2.0.0)
-  - SQLite.swift (1.0.0)
+  - SQLite.swift (0.10.1)
   - UIColor_Hex_Swift (1.8)
 
 DEPENDENCIES:
   - Result (= 1.0.1)
   - RxCocoa (= 2.0.0)
   - RxSwift (= 2.0.0)
-  - SQLite.swift (from `https://github.com/stephencelis/SQLite.swift.git`)
+  - SQLite.swift (~> 0.10.1)
   - UIColor_Hex_Swift (~> 1.8)
-
-EXTERNAL SOURCES:
-  SQLite.swift:
-    :git: https://github.com/stephencelis/SQLite.swift.git
-
-CHECKOUT OPTIONS:
-  SQLite.swift:
-    :commit: da2d43422a72ae0e91356fccfde1959d43b97385
-    :git: https://github.com/stephencelis/SQLite.swift.git
 
 SPEC CHECKSUMS:
   Result: caef80340451e1f07492fa1e89117f83613bce24
   RxCocoa: b0ebd70b4f7450bdb3c8987b122f8fd568dc1e2f
   RxSwift: d83246efa6f16c50c143bec134649d045498f601
-  SQLite.swift: 3bb75f5a650f08673276bc6d3fb1de1b542b8f4d
+  SQLite.swift: 6a6e4b034efc317ce4e203b6af2d3024fee2b570
   UIColor_Hex_Swift: a66b9d5f6e8fddbd9fe32996504f0b7e9d20d680
 
 COCOAPODS: 0.39.0

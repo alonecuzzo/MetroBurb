@@ -131,9 +131,10 @@ class SQLiteStopService: StopServiceProtocol {
 //            for stop in (self?.db.prepare((self?.stops)!))! {
 //                print("stop: \(stop[queryId])")
 //            }
-            for stop in (self?.db.prepare(query2))! {
-                print("id: \(stop)")
-            }
+            
+//            for stop in (self?.db.prepare(query2))! {
+//                print("id: \(stop)")
+//            }
             return NopDisposable.instance
         }
     }
